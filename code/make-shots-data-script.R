@@ -1,4 +1,4 @@
-# Title: Data Preparartion
+# Title: Preparing and Manipulating Shots Data
 # Description: Imports all 5 .csv files and combines them into a global table for data visualization. Also performs
 #              data manipulation to make more descriptive values and add some new variables through recycling
 # Input(s): andre-igoudala.csv
@@ -27,11 +27,11 @@ thompson["name"] <- "Klay Thompson"
 curry["name"] <- "Stephen Curry"
 
 # Manipulating shot_made_flag values to be more descriptive
-iguodala["shot_made_flag"] <- ifelse(iguodala["shot_made_flag" == "n"], "shot_no", "shot_yes")
-green["shot_made_flag"] <- ifelse(green["shot_made_flag" == "n"], "shot_no", "shot_yes")
-durant["shot_made_flag"] <- ifelse(durant["shot_made_flag" == "n"], "shot_no", "shot_yes")
-thompson["shot_made_flag"] <- ifelse(thompson["shot_made_flag" == "n"], "shot_no", "shot_yes")
-curry["shot_made_flag"] <- ifelse(curry["shot_made_flag" == "n"], "shot_no", "shot_yes")
+iguodala$shot_made_flag <- ifelse(iguodala$shot_made_flag == "n", "shot_no", "shot_yes")
+green$shot_made_flag <- ifelse(green$shot_made_flag == "n", "shot_no", "shot_yes")
+durant$shot_made_flag <- ifelse(durant$shot_made_flag == "n", "shot_no", "shot_yes")
+thompson$shot_made_flag <- ifelse(thompson$shot_made_flag == "n", "shot_no", "shot_yes")
+curry$shot_made_flag <- ifelse(curry$shot_made_flag == "n", "shot_no", "shot_yes")
 
 # Mutating Data Frames: Adding "minute" column
 iguodala["minute"] <- (iguodala$period * 12) - iguodala$minutes_remaining
