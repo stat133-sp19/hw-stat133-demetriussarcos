@@ -1,0 +1,147 @@
+---
+title: "Is the Warriors's Dynasty in Decline?""
+author: "Demetrius Sarcos"
+date: "March 13, 2019"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r echo = FALSE}
+# Loading Required Packages
+library(dplyr)
+library(knitr)
+
+# Loading Required Data for Table Generation
+iguodala <- read.csv("../data/andre-iguodala.csv", stringsAsFactors = FALSE)
+green <- read.csv("../data/draymond-green.csv", stringsAsFactors = FALSE)
+durant <- read.csv("../data/kevin-durant.csv", stringsAsFactors = FALSE)
+thompson <- read.csv("../data/klay-thompson.csv", stringsAsFactors = FALSE)
+curry <- read.csv("../data/stephen-curry.csv", stringsAsFactors = FALSE)
+# adding "name" column to individual data frames 
+iguodala["name"] <- "Andre Igoudala"
+green["name"] <- "Draymond Green"
+durant["name"] <- "Kevin Durant"
+thompson["name"] <- "Klay Thompson"
+curry["name"] <- "Stephen Curry"
+# Manipulating shot_made_flag values to be more descriptive
+iguodala$shot_made_flag <- ifelse(iguodala$shot_made_flag == "n", "shot_no", "shot_yes")
+green$shot_made_flag <- ifelse(green$shot_made_flag == "n", "shot_no", "shot_yes")
+durant$shot_made_flag <- ifelse(durant$shot_made_flag == "n", "shot_no", "shot_yes")
+thompson$shot_made_flag <- ifelse(thompson$shot_made_flag == "n", "shot_no", "shot_yes")
+curry$shot_made_flag <- ifelse(curry$shot_made_flag == "n", "shot_no", "shot_yes")
+```
+
+```{r out.width= "80%", echo = FALSE, fig.align='center'}
+knitr::include_graphics("GSW-starting-five.jpg")
+```
+
+It's no doubt that the Golden State Warriors have been the Goliath of the NBA for the past four to five seasons, breaking a plethora of records on their rise to the top including a 73 win season, winning 3 of the last 4 championships and 2 of the last 4 league MVP awards. The list is extensive.  However, while the team may possess the innate shooting and passing abilities equivalent to that of the exhibition basketball group, the Harlem Globetrotters, there have been no shortage of regular season woes as it pertains to both the Warriors's unexpectedly subpar statistical performance and a collapse of chemistry. With the Warriors so vulnerable technically and emotionally, can we expect the Golden Dynasty to be cut short?
+
+## By the Numbers
+
+```{r out.width= "80%", echo = FALSE, fig.align='center'}
+knitr::include_graphics("gsw-shot-charts.png")
+```
+
+The Warriors were an up and coming team in the 2014 season, reaching the Western Conference Finals only to lose to the favorited San Antonio Spurs.  Winning the 2016 NBA finals and acquiring the second best player in the world in Kevin Durant have resulted in a forecast nothing short of the Jordan's Bulls or the 60s Celtics. It suprised everyone when the Warriors didn't even win 60 games in 2017 and struggled to beat the injury ridden Houston Rockets to reach the Finals.  Now, one may argue that the Warriors are just taking the regular season less seriously and are focusing on more important goals to sustain long playoff runs (i.e avoiding potential injuries, resting more during games, etc.).  However, when you look at their numbers, there is a substantial drop off in performance from the pre-Durant era.  Stephen Curry,arguably the best shooter in all of NBA history has seen a fall in the consistency of his bread and butter: the 3-pointer. As displyed in the the table below, Curry's 3pt shooting percentage fell from 45% in 2015 to approximately 40% in 2016.  
+
+#### What's Wrong with Draymond?
+While Curry may be a little inconsistent with his long ball due to injury and less time "on ball",  Draymond Green has experienced the most pronounced negative change year to year.  Green's overall field goal percentage fell from 49% in 2015 to 42% in 2016 mostly due to a collapse of his effective range and a decline in his 3pt shooting percentage from 39% in 2015 to 31% in 2016.  Many experts, former players, and basketball aficionados agree that the fall in the Warriors performance shows the difficulty of assimating a scoring machine like Kevin Durant into an already high powered offense and the effect of injuries over the course of a season
+
+
+```{r}
+# 2PT Effective Shooting Percentage
+curry_2pt <- data.frame(name = "Stephen Curry",
+  total = sum(curry$shot_type == "2PT Field Goal"),
+  made =  sum((curry$shot_type  == "2PT Field Goal") & (curry$shot_made_flag == "shot_yes")))
+curry_2pt["perc"] <- curry_2pt$made / curry_2pt$total
+
+durant_2pt <- data.frame(name = "Kevin Durant",
+  total = sum(durant$shot_type == "2PT Field Goal"),
+  made =  sum((durant$shot_type  == "2PT Field Goal") & (durant$shot_made_flag == "shot_yes")))
+durant_2pt["perc"] <- durant_2pt$made / durant_2pt$total
+
+green_2pt <- data.frame(name = "Draymond Green",
+  total = sum(green$shot_type == "2PT Field Goal"),
+  made =  sum((green$shot_type  == "2PT Field Goal") & (green$shot_made_flag == "shot_yes")))
+green_2pt["perc"] <- green_2pt$made / green_2pt$total
+
+iguodala_2pt <- data.frame(name = "Andre Iguodala",
+  total = sum(iguodala$shot_type == "2PT Field Goal"),
+  made =  sum((iguodala$shot_type  == "2PT Field Goal") & (iguodala$shot_made_flag == "shot_yes")))
+iguodala_2pt["perc"] <- iguodala_2pt$made / iguodala_2pt$total
+
+thompson_2pt <- data.frame(name = "Klay Thompson",
+  total = sum(thompson$shot_type == "2PT Field Goal"),
+  made =  sum((thompson$shot_type  == "2PT Field Goal") & (thompson$shot_made_flag == "shot_yes")))
+thompson_2pt["perc"] <- thompson_2pt$made / thompson_2pt$total
+
+ESP_2PT <- rbind(curry_2pt, durant_2pt, green_2pt, iguodala_2pt, thompson_2pt)
+arrange(ESP_2PT, desc(perc))
+```
+
+```{r}
+# 3PT Effective Shooting Percentage
+curry_3pt <- data.frame(name = "Stephen Curry",
+  total = sum(curry$shot_type == "3PT Field Goal"),
+  made =  sum((curry$shot_type  == "3PT Field Goal") & (curry$shot_made_flag == "shot_yes")))
+curry_3pt["perc"] <- curry_3pt$made / curry_3pt$total
+
+durant_3pt <- data.frame(name = "Kevin Durant",
+  total = sum(durant$shot_type == "3PT Field Goal"),
+  made =  sum((durant$shot_type  == "3PT Field Goal") & (durant$shot_made_flag == "shot_yes")))
+durant_3pt["perc"] <- durant_3pt$made / durant_3pt$total
+
+green_3pt <- data.frame(name = "Draymond Green",
+  total = sum(green$shot_type == "3PT Field Goal"),
+  made =  sum((green$shot_type  == "3PT Field Goal") & (green$shot_made_flag == "shot_yes")))
+green_3pt["perc"] <- green_3pt$made / green_3pt$total
+
+iguodala_3pt <- data.frame(name = "Andre Iguodala",
+  total = sum(iguodala$shot_type == "3PT Field Goal"),
+  made =  sum((iguodala$shot_type  == "3PT Field Goal") & (iguodala$shot_made_flag == "shot_yes")))
+iguodala_3pt["perc"] <- iguodala_3pt$made / iguodala_3pt$total
+
+thompson_3pt <- data.frame(name = "Klay Thompson",
+  total = sum(thompson$shot_type == "3PT Field Goal"),
+  made =  sum((thompson$shot_type  == "3PT Field Goal") & (thompson$shot_made_flag == "shot_yes")))
+thompson_3pt["perc"] <- thompson_3pt$made / thompson_3pt$total
+
+ESP_3PT <- rbind(curry_3pt, durant_3pt, green_3pt, iguodala_3pt, thompson_3pt)
+arrange(ESP_3PT, desc(perc))
+```
+
+```{r}
+# Effective Shooting Percentage
+curry_pt <- data.frame(name = "Stephen Curry",
+  total = length(curry$shot_type),
+  made =  sum((curry$shot_made_flag == "shot_yes")))
+curry_pt["perc"] <- curry_pt$made / curry_pt$total
+
+durant_pt <- data.frame(name = "Kevin Durant",
+  total = length(durant$shot_type),
+  made =  sum(durant$shot_made_flag == "shot_yes"))
+durant_pt["perc"] <- durant_pt$made / durant_pt$total
+
+green_pt <- data.frame(name = "Draymond Green",
+  total = length(green$shot_type),
+  made =  sum((green$shot_made_flag == "shot_yes")))
+green_pt["perc"] <- green_pt$made / green_pt$total
+
+iguodala_pt <- data.frame(name = "Andre Iguodala",
+  total = length(iguodala$shot_type),
+  made =  sum(iguodala$shot_made_flag == "shot_yes"))
+iguodala_pt["perc"] <- iguodala_pt$made / iguodala_pt$total
+
+thompson_pt <- data.frame(name = "Klay Thompson",
+  total = length(thompson$shot_type),
+  made =  sum(thompson$shot_made_flag == "shot_yes"))
+thompson_pt["perc"] <- thompson_pt$made / thompson_pt$total
+
+ESP <- rbind(curry_pt, durant_pt, green_pt, iguodala_pt, thompson_pt)
+arrange(ESP, desc(perc))
+```
+
