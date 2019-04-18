@@ -1,0 +1,10 @@
+name: savings_app
+title:
+username:
+account: dsarcos
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 873860
+bundleId: 2020191
+url: https://dsarcos.shinyapps.io/savings_app/
+when: 1555551940.02142
