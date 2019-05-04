@@ -1,0 +1,113 @@
+---
+title: "Introduction-to-Binomial"
+author: "Demetrius Sarcos"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction-to-Binomial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(binomial)
+```
+
+This document introduces users to the `binomial` package, an R package containing several functions for calculating probabilities of a Binomial random variable, and related calculations such as the probability distribution, the expected value, variance, etc.
+
+## Binomial Distribution
+
+The Binomial distribution is perhaps the most famous probability distribution among discrete
+random variables with the following form:
+
+\[
+\begin{equation}
+\ Pr(X=k) = {n \choose k} p^k (1-p)^{n-k}
+\end{equation}
+\]
+
+where:
+
+* n is the number of (fixed) trials (n ≥ 0)
+* p is the probability of success on each trial (0 ≤ p ≤ 1)
+* 1 − p is the probability of failure on each trial
+* k is a variable that represents the number of successes out of n trials (0 ≤ k ≤ n)
+* the first term in parenthesis is NOT a fraction, it is the number of combinations in
+which k success can occur in n trials
+
+The `binomial` package takes these three arguments:
+1. trials (the number of trials)
+2. success (the number of successes)
+3. prob (the probability of success)
+
+and allows users to compute various statistical measures, tables, etc.
+
+## Computing Sample Binomial Probability
+
+First we begin by calculating the binomial probability using with some user defined parameters and the `bin_probability()` function. The `bin_probability` function invokes another of `binomial`'s functions, `bin_choose()`, which computes the binomial combinations given the number of trials and successes. For example,
+
+```{r}
+# number of trials
+n <- 10
+# number of successes
+k <- 4
+# probability of success
+p <- 0.6
+
+sample_prob <- bin_probability(trials = n, success = k, prob = p)
+sample_prob
+```
+
+## Displaying Binomial Probability
+#### Data Table
+
+The `binomial` package provides another function `bin_distribution` that displays binomial probabilities for different number of sucesses in a data frame. The generated has is structured so the number of successes are in the first column and the corresponding probabilities are in the second column.
+
+```{r}
+tbl <- bin_distribution(n, p)
+tbl
+```
+
+#### Plotting Binomial Probabilities
+
+This package provides a plotting method for objects created using the `bin_distribution()` function using R's base plot function. The `plot.bindis()` method generates a barplot of the binomial probabilities for different numbers of success.
+
+```{r}
+plot(tbl)
+```
+
+#### Cumulative Binomial Probabilities
+
+Another function `binomial` provides is the `bin_cumulative()` function which, like the `bin_distribution()` function, creates a data table that also includes the cumulative binomial probabilities over the number of successes.
+
+```{r}
+tbl2 <- bin_cumulative(n,p)
+tbl2
+```
+
+#### Plotting Cumulative Binomial Probabilities
+
+`binomial` also provides a plotting method for objects created using `bin_cumulative` that generates a line graph of the cumulative binomial probabilities over the number of successes.
+
+```{r}
+plot(tbl2)
+```
+
+## Creating Binomial Variables
+
+`binomial` also provides the function `bin_variable` which allows users to create binomial random variables that list the number of trials and the probability of success. `bin_variable()` has its own summary method that allows you to display the summary measures of the binomial variable in list like format.
+
+#### Plotting Binomial Variables
+
+```{r}
+v <- bin_variable(n, p)
+summary(v)
+```
+

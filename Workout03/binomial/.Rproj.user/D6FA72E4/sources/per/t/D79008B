@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1556947213060.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "72183693",
+    "id" : "D79008B",
+    "lastKnownWriteTime" : 1549263241,
+    "last_content_update" : 1549263241,
+    "path" : "~/Cal Stuff/Stat133/Warmups/Warmup-01/warmup01-demetrius-sarcos.Rmd",
+    "project_path" : null,
+    "properties" : {
+        "cursorPosition" : "84,2",
+        "scrollLine" : "62"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

@@ -1,0 +1,19 @@
+---
+title: "demo"
+author: "Demetrius Sarcos"
+date: "May 3, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+where:
+
+* n is the number of (fixed) trials (n ≥ 0)
+* p is the probability of success on each trial (0 ≤ p ≤ 1)
+* 1 − p is the probability of failure on each trial
+* k is a variable that represents the number of successes out of n trials (0 ≤ k ≤ n)
+* the first term in parenthesis is NOT a fraction, it is the number of combinations in
+which k success can occur in n trials

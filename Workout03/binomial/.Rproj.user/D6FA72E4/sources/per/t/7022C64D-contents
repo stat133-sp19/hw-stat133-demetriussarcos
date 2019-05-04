@@ -1,0 +1,30 @@
+---
+title: "Introduction to roller"
+author: "Demertius Sarcos"
+date: "`r as.date("12/02/2018", "%m/%d/%Y")`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to roller}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(roller)
+```
+
+## Rolling Device
+
+This document introduces you to the roller's tools that allow you to simulate rolls of any user specified device and to visualize the relative freqencies in said rolls.
+
+## Creating a Device
+
+The first step is to create a `"device"` object with the function `device()`:
+
+```{r}
+dummy_device <- device()
+dummy_device
+```
+
+By default, `device()` creates a _fair_ coin by default with standard two sides and with probability values for each one of 0.5  

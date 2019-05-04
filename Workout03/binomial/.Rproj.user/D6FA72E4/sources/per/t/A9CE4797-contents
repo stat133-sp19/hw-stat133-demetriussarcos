@@ -1,0 +1,513 @@
+---
+title: "Working Code Wkout03"
+author: "Demetrius Sarcos"
+date: "4/29/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Private Functions
+### Checker Functions
+#### check_prob()
+
+```{r}
+# Title: check_prob
+# Description: tests if input "prob" is a valid probability value (i.e. 0 ≤ p ≤ 1)
+# Inputs
+#   prob: a vector of probabilities
+# Output
+#   TRUE if "prob" is a valid probability value and an error message otherwise
+
+check_prob <- function(prob) {
+  if (is.numeric(prob) == FALSE) {
+    stop("\ninvalid prob value; prob must be numeric")
+  }
+  if (prob < 0 | prob > 1) {
+    stop("\ninvalid prob value; prob must be a number betwen 0 and 1")
+  }
+  if (length(prob) != 1) {
+    stop("\ninvalid prob value; prob must be a number betwen 0 and 1")
+  }
+  TRUE
+}
+```
+
+#### check_trials()
+
+```{r}
+# Title: check_trials
+# Description: tests if input "trial" is a valid value for number of trials (i.e. n is a non-negative integer)
+# Inputs
+#   trials: a vector of length 1 for number of trials
+# Output
+#   TRUE if "trial" is a valid value for number of trials and an error message otherwise
+
+check_trials <- function(trials) {
+  if ((trials %% 1) != 0) {
+    stop("\ninvalid trials value; trials must be a non-negative integer")
+  }
+  if (trials < 0) {
+    stop("\ninvalid trials value; trials must be a non-negative integer")
+  }
+  if (length(trials) != 1) {
+    stop("\ninvalid trials value; trials must be a non-negative integer")
+  }
+  TRUE
+}
+```
+
+#### check_success()
+
+```{r}
+# Title: check_success
+# Description: tests if input "success" is a valid value for number of successes (i.e. 0 ≤ k ≤ n)
+# Inputs
+#   success: a vector of non-negative integer(s) for number of succcess
+#   trials: a vector of non-negative integer(s) for number of trials
+# Output
+#   TRUE if success is a valid value for number of successes and an error message otherwise
+
+check_success <- function(success, trials) {
+  if (success > trials) {
+    stop("\ninvalid success value; success cannot be greater than trials")
+  }
+  if ((success %% 1) != 0) {
+    stop("\ninvalid success value; success must be a vector of non-negative integers")
+  }
+  if (success < 0) {
+    stop("\ninvalid success value; success must be a vector of non-negative integers")
+  }
+  TRUE
+}
+
+any(v>t)
+v <- c(0,3,7,15,50)
+t <- 30
+
+```
+
+### Auxiliary Functions
+
+#### aux_mean()
+
+```{r}
+# Title: aux_mean
+# Description: computes the expected value or mean of a binomial distribution
+# Inputs
+#   prob: a vector of probabilities
+#   trials: a vector of non-negative integer(s) for number of trials
+# Output
+#   Computed mean for a binomial distribution
+
+aux_mean <- function(prob, trials) {
+  prob * trials
+}
+```
+
+#### aux_variance
+
+```{r}
+# Title: aux_mean
+# Description: computes the variance of a binomial distribution
+# Inputs
+#   prob: a vector of probabilities
+#   trials: a vector of non-negative integer(s) for number of trials
+# Output
+#   Computed variance of a binomial distribution
+
+aux_variance <- function(prob, trials) {
+  trials * prob * (1 - prob)
+}
+```
+
+
+#### aux_mode()
+
+```{r}
+# Title: aux_mode
+# Description: computes the mode of a binomial dstributon
+# Inputs
+#   prob: a vector of probabilities
+#   trials: a vector of non-negative integer(s) for number of trials
+# Output
+#   Computed mode of a binomial distribution
+
+aux_mode <- function(trials, prob) {
+  input <- (trials*prob)+prob
+  m <- floor(input)
+  if ((input %% 1) != 0) {
+    output <- m
+    return(output)
+  }
+  return(c(m, m-1))
+}
+```
+
+#### aux_skewness()
+
+```{r}
+# Title: aux_skewness
+# Description: computes the skewness of a binomial dstributon
+# Inputs
+#   prob: a vector of probabilities
+#   trials: a vector of non-negative integer(s) for number of trials
+# Output
+#   Computed skewness of a binomial distribution
+
+aux_skewness <- function(prob, trials) {
+  (1 - (2 * prob)) / sqrt(trials * prob * (1 - prob))
+}
+```
+
+#### aux_kurtosis()
+
+```{r}
+# Title: aux_kurtosis
+# Description: computes the kurtosis of a binomial dstributon
+# Inputs
+#   prob: a vector of probabilities
+#   trials: a vector of non-negative integer(s) for number of trials
+# Output
+#   Computed kurtosis of a binomial distribution
+
+aux_kurtosis <- function(prob, trials) {
+  (1 - ((6 * prob) * (1 - prob))) / (trials * prob * (1 - prob))
+}
+```
+
+
+```{r}
+# Roxygen comments for copying
+#' @title
+#' @description
+#' @param
+#' @param
+#' @param
+#' @return
+#' @examples
+```
+
+
+## Main Functions
+#### bin_choose()
+
+```{r}
+#' @title bin_choose
+#' @description calculates the number of combinations in which k successes can occur in n trials
+#' @param n number of trials
+#' @param k number of successes
+#' @return computed number of trials
+#' @examples
+#' bin_choose(n = 5, k = 2)
+#' bin_choose(5, 0)
+#' bin_choose(5, 1:3)
+#' @export
+
+bin_choose <- function(n, k) {
+  if (k > n) {
+    stop("\nk cannot be greater than n")
+  }
+  factorial(n) / ((factorial(k)) * factorial(n - k))
+}
+
+bin_choose(n = 5, k = 2)
+bin_choose(5, 0)
+bin_choose(5, 1:3)
+```
+
+#### bin_probability()
+
+```{r}
+#' @title bin_probability
+#' @description computes the binomial probability of getting k successes in n trials
+#' @param trials number of trials
+#' @param success number of successes
+#' @param prob probability of success
+#' @return computed binomial probability
+#' @examples
+#' # probability of getting 2 successes in 5 trials
+#' # (assuming prob of success = 0.5)
+#' bin_probability(success = 2, trials = 5, prob = 0.5)
+#' # probabilities of getting 2 or less successes in 5 trials
+#' # (assuming prob of success = 0.5)
+#' bin_probability(success = 0:2, trials = 5, prob = 0.5)
+#' # 55 heads in 100 tosses of a loaded coin with 45% chance of heads
+#' bin_probability(success = 55, trials = 100, prob = 0.45)
+#' @export
+
+bin_probability <- function(trials, success, prob) {
+  check_trials(trials = trials)
+  check_prob(prob = prob)
+  check_success(success = success, trials = trials)
+  p <- bin_choose(n = trials, k = success) * (prob ^ success) * ((1 - prob) ^ (trials - success))
+  output <- rep(0, length(success))
+  if (length(success) > 1) {
+    for (i in 1:length(output)) {
+      output[i] <- bin_choose(n = trials, k = success[i]) * (prob ^ success[i]) * ((1 - prob) ^ (trials - success[i]))
+    }
+    p <- output
+  }
+  return(p)
+}
+
+
+v <- 0:2
+
+length(v)>1
+b <- rep(0, length(v))
+for (i in 1:length(v)) {
+  b[i] <- bin_choose(n = 5, k = v[i]) * (0.5 ^ v[i]) * ((1 - 0.5) ^ (5 - v[i]))
+    }
+b
+bin_probability(5,0:2, 0.5)
+```
+
+#### bin_distribution()
+
+```{r}
+#' @title bin_distribution
+#' @description creates a data frame of binomial distribution with successes in 1st column and probability in the other
+#' @param trials number of trials
+#' @param prob probability of success
+#' @return data frame of the binomial distribution
+#' @examples
+#' # binomial probability distribution
+#' bin_distribution(trials = 5, prob = 0.5)
+#' @export
+
+bin_distribution <- function(trials, prob) {
+  n <- trials
+  p <- prob
+  probs <- rep(0, n+1)
+  for (k in 0:n) {
+    probs[k+1] <- bin_probability(n, k, p)
+    }
+  df <- data.frame(
+    success = 0:n,
+    probability = probs
+    )
+  class(df) <- c("bindis", "data.frame")
+  df
+}
+```
+
+#### bin_cumulative()
+
+```{r}
+#' @title bin_cumulative
+#' @description creates a data frame of a binomial distribution that lists the successes, the binomial probability, and the cumulative
+#' @param trials number of trials
+#' @param prob probability of success
+#' @return the generated data frame
+#' @export
+
+bin_cumulative <- function(trials, prob) {
+  n <- trials
+  p <- prob
+  probs <- rep(0, n+1)
+  cum <- rep(0, n+1)
+  for (k in 0:n) {
+    probs[k+1] <- bin_probability(n, k, p)
+  }
+
+  df <- data.frame(
+    success = 0:n,
+    probability = probs,
+    cumulative = cumsum(probs)
+    )
+  class(df) <- c("bincum", "data.frame")
+  df
+}
+```
+
+#### bin_variable()
+
+```{r}
+#' @title bin_variable
+#' @description creates a list representing a binomial random variable with class "binvar"
+#' @param trials number of trials
+#' @param prob probability of success
+#' @return the generated list
+
+bin_variable <- function(trials, prob) {
+  check_trials(trials = trials)
+  check_prob(prob = prob)
+  output <- list(trials = trials, prob = prob)
+  class(output) <- "binvar"
+  output
+}
+```
+
+
+## Methods
+#### plot.bindis()
+
+```{r}
+#' @export
+
+plot.bindis <- function(x) {
+  barplot(x$probability, 
+          xlab = "Successes",
+          ylab = "Probabiity",
+          col = "#6D9DFF",
+          names.arg = x$success)
+}
+```
+
+#### plot.bincum()
+
+```{r}
+#' @export
+
+plot.bincum <- function(x) {
+  plot(x$cumulative,
+       xlab = "Successes",
+       ylab = "Probability",
+       main = "Binomial Cumulative Distribution",
+       col = "#2C67FF",
+       type = "o",
+       panel.first = grid()
+       )
+}
+```
+
+
+#### print.binvar()
+
+```{r}
+#' @export
+
+print.binvar <- function(x) {
+  cat(paste('"Binomial Variable"'))
+  cat("\n\nParameters")
+  cat("\n-number of trials:", paste(x$trials))
+  cat("\n-prob of success:", paste(x$prob))
+}
+```
+
+```{r}
+#' @export
+
+summary.binvar <- function(x) {
+  output <- list(trials = x$trials,
+                 prob = x$prob,
+                 mean = aux_mean(prob = x$prob, trials = x$trials),
+                 variance = aux_variance(prob = x$prob, trials = x$trials),
+                 skewness = aux_skewness(prob = x$prob, trials = x$trials),
+                 kurtosis = aux_kurtosis(prob = x$prob, trials = x$trials))
+  class(output) <- "summary.binvar"
+  output
+}
+```
+
+```{r}
+#' @export
+
+print.summary.binvar <- function(x) {
+  cat(paste('"Summary Binomial"'))
+  cat("\n\nParameters")
+  cat("\n-number of trials:", paste(x$trials))
+  cat("\n-prob of success :", paste(x$prob))
+  cat("\n\nMeasures")
+  cat("\n-mean    :", paste(x$mean))
+  cat("\n-variance:", paste(x$variance))
+  cat("\n-skewness:", paste(x$skewness))
+  cat("\n-kurtosis:", paste(x$kurtosis))
+}
+```
+
+#### bin_mean()
+
+```{r}
+#' @title bin_mean
+#' @description computes the expected value or mean of a binomial distribution
+#' @param trials number of trials
+#' @param prob probability of success
+#' @return the computed mean for a binomial distribution
+#' @examples
+#' binmean(10, 0.3)
+
+bin_mean <- function(trials, prob) {
+  check_trials(trials = trials)
+  check_prob(prob = prob)
+  aux_mean(trials = trials, prob = prob)
+}
+```
+
+
+#### bin_variance()
+
+```{r}
+#' @title bin_variance
+#' @description computes the variance of a binomial distribution
+#' @param trials number of trials
+#' @param prob probability of success
+#' @return Computed variance of a binomial distribution
+#' @examples
+#' bin_variance(10, 0.3)
+
+bin_variance <- function(trials, prob) {
+  check_trials(trials = trials)
+  check_prob(prob = prob)
+  aux_variance(trials = trials, prob = prob)
+}
+```
+
+#### bin_skewness()
+
+```{r}
+#' @title
+#' @description computes the skewness of a binomial dstributon
+#' @param trials number of trials
+#' @param prob probability of success
+#' @return Computed skewness of a binomial distribution
+#' @examples
+#' bin_skewness(10, 0.3)
+
+bin_skewness <- function(trials, prob) {
+  check_trials(trials = trials)
+  check_prob(prob = prob)
+  aux_skewness(trials = trials, prob = prob)
+}
+```
+
+#### bin_kurtosis()
+
+```{r}
+#' @title bin_kurtosis
+#' @description computes the kurtosis of a binomial dstributon
+#' @param trials number of trials
+#' @param prob probability of succcess
+#' @return  Computed kurtosis of a binomial distribution
+#' @examples
+#' bin_kurtosis(10, 0.3)
+
+bin_kurtosis <- function(trials, prob) {
+  check_trials(trials = trials)
+  check_prob(prob = prob)
+  aux_kurtosis(trials = trials, prob = prob)
+}
+```
+
+## Code for Tests Folder
+#### testthat.R
+
+```{r}
+library(testthat)
+library(binomial)
+
+test_check("binomial")
+```
+
+#### Tests for checker functions
+
+```{r}
+Context("Checker Functions")
+
+test_that("checker ")
+```
+
